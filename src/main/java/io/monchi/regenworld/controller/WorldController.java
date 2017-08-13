@@ -6,6 +6,13 @@ package io.monchi.regenworld.controller;
 public interface WorldController {
 
     /**
+     * Check to see if the world is controllable
+     * @param name name of the world to check
+     * @return true if controllable, false if uncontrollable
+     */
+    boolean isControllable(String name);
+
+    /**
      * Regenerate a world
      * @param name name of the world to regenerate
      */
