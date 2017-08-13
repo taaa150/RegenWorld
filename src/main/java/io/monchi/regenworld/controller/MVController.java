@@ -1,7 +1,6 @@
 package io.monchi.regenworld.controller;
 
 import com.onarandombox.MultiverseCore.MultiverseCore;
-import com.onarandombox.MultiverseCore.api.MultiversePlugin;
 import com.onarandombox.MultiverseCore.api.MultiverseWorld;
 
 /**
@@ -11,8 +10,8 @@ public class MVController implements WorldController{
 
     private MultiverseCore core;
 
-    public MVController(MultiversePlugin mvPlugin) {
-        this.core = mvPlugin.getCore();
+    public MVController(MultiverseCore core) {
+        this.core = core;
     }
 
     @Override

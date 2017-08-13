@@ -2,3 +2,10 @@ name: RegenWorld
 version: ${project.version}
 main: io.monchi.regenworld.RegenWorld
 softdepend: [Multiverse-Core]
+commands:
+  regenworld:
+    description: RegenWorld command
+    aliases: rw
+    usage: /regenworld help
+    permission: regenworld.*
+
