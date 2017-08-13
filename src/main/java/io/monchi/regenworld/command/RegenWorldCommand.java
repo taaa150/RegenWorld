@@ -13,10 +13,10 @@ import org.bukkit.command.CommandSender;
  */
 public class RegenWorldCommand implements CommandExecutor {
 
-    private WorldController controller;
+    private RegenWorld instance;
 
     public RegenWorldCommand() {
-        this.controller = RegenWorld.getInstance().getController();
+        this.instance = RegenWorld.getInstance();
     }
 
     @Override
@@ -53,15 +53,22 @@ public class RegenWorldCommand implements CommandExecutor {
                 if (Bukkit.getWorld(args[1]) == null) {
                     sender.sendMessage(ChatColor.RED + "The world is not found: " + args[1]);
                 }
-                else if (!controller.isControllable(args[1])) {
+                else if (!instance.getController().isControllable(args[1])) {
                     sender.sendMessage(ChatColor.RED + "The world is not controllable: " + args[1]);
                 }
                 else {
                     sender.sendMessage(ChatColor.GREEN + " Start regenerating the world");
                     sender.sendMessage(ChatColor.GREEN + "It may take few seconds...");
-                    controller.regenWorld(args[1]);
+                    for (String s : instance.getRwConfig().getBeforeCommands()) {
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.replaceAll("%world%", args[1]));
+                    }
+                    instance.getController().regenWorld(args[1]);
+                    for (String s : instance.getRwConfig().getAfterCommands()) {
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.replaceAll("%world%", args[1]));
+                    }
                     sender.sendMessage(ChatColor.GREEN + "Regeneration has been completed!");
                 }
+                break;
         }
     }
 

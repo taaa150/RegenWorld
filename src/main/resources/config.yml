@@ -1,0 +1,5 @@
+command:
+  before:
+    - say Start regenerating %world%
+  after:
+    - say Finish regenerating %world%

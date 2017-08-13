@@ -7,14 +7,21 @@ import io.monchi.regenworld.controller.WorldController;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+
 public final class RegenWorld extends JavaPlugin {
 
     private static RegenWorld instance;
+    private RwConfig rwConfig;
     private WorldController controller;
 
     @Override
     public void onEnable() {
         instance = this;
+
+        saveDefaultConfig();
+        this.rwConfig = new RwConfig(new File(getDataFolder(), "config.yml"));
+        rwConfig.load();
 
         if (getServer().getPluginManager().isPluginEnabled("Multiverse-Core")) {
             this.controller = new MVController((MultiverseCore)getServer().getPluginManager().getPlugin("Multiverse-Core"));
@@ -30,6 +37,10 @@ public final class RegenWorld extends JavaPlugin {
 
     @Override
     public void onDisable() {
+    }
+
+    public RwConfig getRwConfig() {
+        return rwConfig;
     }
 
     public WorldController getController() {
