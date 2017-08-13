@@ -1,0 +1,4 @@
+name: RegenWorld
+version: ${project.version}
+main: io.monchi.regenworld.RegenWorld
+softdepend: [Multiverse-Core]
