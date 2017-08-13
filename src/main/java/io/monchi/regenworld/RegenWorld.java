@@ -1,6 +1,7 @@
 package io.monchi.regenworld;
 
 import com.onarandombox.MultiverseCore.api.MultiversePlugin;
+import io.monchi.regenworld.command.RegenWorldCommand;
 import io.monchi.regenworld.controller.MVController;
 import io.monchi.regenworld.controller.WorldController;
 import org.bukkit.ChatColor;
@@ -22,6 +23,8 @@ public final class RegenWorld extends JavaPlugin {
             getLogger().severe(ChatColor.RED + "No world management plugin has been found");
             getLogger().severe(ChatColor.RED + "WorldRegen will be disabled");
         }
+
+        getServer().getPluginCommand("regenworld").setExecutor(new RegenWorldCommand());
     }
 
     @Override
