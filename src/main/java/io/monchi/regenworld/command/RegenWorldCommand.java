@@ -26,7 +26,7 @@ public class RegenWorldCommand implements CommandExecutor {
         }
         else {
             for (CommandType type : CommandType.values()) {
-                if (type.getName().equalsIgnoreCase(args[1])) {
+                if (type.getName().equalsIgnoreCase(args[0])) {
                     if (args.length < type.getArgsLength()) {
                         sender.sendMessage(ChatColor.RED + "Incorrect usage!");
                         sender.sendMessage(ChatColor.RED + type.getUsage());
@@ -60,7 +60,7 @@ public class RegenWorldCommand implements CommandExecutor {
                     sender.sendMessage(ChatColor.GREEN + " Start regenerating the world");
                     sender.sendMessage(ChatColor.GREEN + "It may take few seconds...");
                     controller.regenWorld(args[1]);
-                    sender.sendMessage(ChatColor.GREEN + "Regeneration has been completed");
+                    sender.sendMessage(ChatColor.GREEN + "Regeneration has been completed!");
                 }
         }
     }
