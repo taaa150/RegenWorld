@@ -21,7 +21,7 @@ public class RegenWorldListener implements Listener {
 
     @EventHandler
     public void onRegenWorld(RegenWorldEvent event) {
-        for (String s : RegenWorld.getInstance().getRwConfig().getBeforeCommands()) {
+        for (String s : RegenWorld.getInstance().getRwConfig().getAfterCommands()) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.replaceAll("%world%", event.getWorldName()));
         }
     }
