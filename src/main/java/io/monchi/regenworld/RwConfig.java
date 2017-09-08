@@ -37,8 +37,9 @@ public class RwConfig {
     }
 
     public void save() {
+        config.set("periodical.date", nextRegenDate.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+        
         try {
-            config.set("periodical.date", nextRegenDate.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
             config.save(file);
         } catch (IOException e) {
             e.printStackTrace();
