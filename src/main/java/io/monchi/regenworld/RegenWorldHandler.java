@@ -1,6 +1,8 @@
 package io.monchi.regenworld;
 
 import io.monchi.regenworld.controller.WorldController;
+import io.monchi.regenworld.event.PreRegenWorldEvent;
+import io.monchi.regenworld.event.RegenWorldEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -83,10 +85,17 @@ public class RegenWorldHandler implements CommandExecutor {
         for (String s : instance.getRwConfig().getBeforeCommands()) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.replaceAll("%world%", name));
         }
+        PreRegenWorldEvent preEvent = new PreRegenWorldEvent(name);
+        Bukkit.getPluginManager().callEvent(preEvent);
+        if (preEvent.isCancelled())
+            return;
+        
         controller.regenWorld(name);
         for (String s : instance.getRwConfig().getAfterCommands()) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.replaceAll("%world%", name));
         }
+
+        Bukkit.getPluginManager().callEvent(new RegenWorldEvent(name));
     }
 
     public WorldController getController() {
