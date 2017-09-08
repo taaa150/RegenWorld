@@ -1,6 +1,5 @@
-package io.monchi.regenworld.command;
+package io.monchi.regenworld;
 
-import io.monchi.regenworld.RegenWorld;
 import io.monchi.regenworld.controller.WorldController;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -8,30 +7,36 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Timer;
+
 /**
  * @author Mon_chi
  */
-public class RegenWorldCommand implements CommandExecutor {
+public class RegenWorldHandler implements CommandExecutor {
 
     private RegenWorld instance;
+    private WorldController controller;
+    private Timer timer;
 
-    public RegenWorldCommand() {
+    public RegenWorldHandler(WorldController controller) {
         this.instance = RegenWorld.getInstance();
+        this.controller = controller;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
             runCommand(sender, CommandType.HELP, args);
-        }
-        else {
+        } else {
             for (CommandType type : CommandType.values()) {
                 if (type.getName().equalsIgnoreCase(args[0])) {
                     if (args.length < type.getArgsLength()) {
                         sender.sendMessage(ChatColor.RED + "Incorrect usage!");
                         sender.sendMessage(ChatColor.RED + type.getUsage());
-                    }
-                    else {
+                    } else {
                         runCommand(sender, type, args);
                     }
                     return true;
@@ -40,6 +45,16 @@ public class RegenWorldCommand implements CommandExecutor {
             runCommand(sender, CommandType.HELP, args);
         }
         return true;
+    }
+
+    public void scheduleTask(ZonedDateTime date) {
+        if (timer != null)
+            timer.cancel();
+        timer = new Timer();
+        timer.schedule(new RegenTask(), Date.from(date.toInstant()));
+        instance.getLogger().info("Next regeneration will run at " + date.format(DateTimeFormatter.ISO_LOCAL_DATE) + " " + date.format(DateTimeFormatter.ISO_LOCAL_TIME));
+        instance.getRwConfig().setNextRegenDate(date);
+        instance.getRwConfig().save();
     }
 
     private void runCommand(CommandSender sender, CommandType command, String[] args) {
@@ -52,24 +67,30 @@ public class RegenWorldCommand implements CommandExecutor {
             case REGEN:
                 if (Bukkit.getWorld(args[1]) == null) {
                     sender.sendMessage(ChatColor.RED + "The world is not found: " + args[1]);
-                }
-                else if (!instance.getController().isControllable(args[1])) {
+                } else if (!controller.isControllable(args[1])) {
                     sender.sendMessage(ChatColor.RED + "The world is not controllable: " + args[1]);
-                }
-                else {
+                } else {
                     sender.sendMessage(ChatColor.GREEN + " Start regenerating the world");
                     sender.sendMessage(ChatColor.GREEN + "It may take few seconds...");
-                    for (String s : instance.getRwConfig().getBeforeCommands()) {
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.replaceAll("%world%", args[1]));
-                    }
-                    instance.getController().regenWorld(args[1]);
-                    for (String s : instance.getRwConfig().getAfterCommands()) {
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.replaceAll("%world%", args[1]));
-                    }
+                    regenWorld(args[1]);
                     sender.sendMessage(ChatColor.GREEN + "Regeneration has been completed!");
                 }
                 break;
         }
+    }
+
+    public void regenWorld(String name) {
+        for (String s : instance.getRwConfig().getBeforeCommands()) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.replaceAll("%world%", name));
+        }
+        controller.regenWorld(name);
+        for (String s : instance.getRwConfig().getAfterCommands()) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.replaceAll("%world%", name));
+        }
+    }
+
+    public WorldController getController() {
+        return controller;
     }
 
     enum CommandType {

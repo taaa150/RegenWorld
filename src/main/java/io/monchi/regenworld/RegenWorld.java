@@ -1,19 +1,19 @@
 package io.monchi.regenworld;
 
 import com.onarandombox.MultiverseCore.MultiverseCore;
-import io.monchi.regenworld.command.RegenWorldCommand;
 import io.monchi.regenworld.controller.MVController;
 import io.monchi.regenworld.controller.WorldController;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.time.ZonedDateTime;
 
 public final class RegenWorld extends JavaPlugin {
 
     private static RegenWorld instance;
     private RwConfig rwConfig;
-    private WorldController controller;
+    private RegenWorldHandler handler;
 
     @Override
     public void onEnable() {
@@ -23,16 +23,29 @@ public final class RegenWorld extends JavaPlugin {
         this.rwConfig = new RwConfig(new File(getDataFolder(), "config.yml"));
         rwConfig.load();
 
+        WorldController controller;
         if (getServer().getPluginManager().isPluginEnabled("Multiverse-Core")) {
-            this.controller = new MVController((MultiverseCore)getServer().getPluginManager().getPlugin("Multiverse-Core"));
+            controller = new MVController((MultiverseCore)getServer().getPluginManager().getPlugin("Multiverse-Core"));
         }
         else {
             getLogger().severe(ChatColor.RED + "No world management plugin has been found");
             getLogger().severe(ChatColor.RED + "WorldRegen will be disabled");
             getServer().getPluginManager().disablePlugin(this);
+            return;
         }
 
-        getServer().getPluginCommand("regenworld").setExecutor(new RegenWorldCommand());
+        this.handler = new RegenWorldHandler(controller);
+        getServer().getPluginCommand("regenworld").setExecutor(handler);
+
+        ZonedDateTime date = rwConfig.getNextRegenDate();
+        ZonedDateTime now = ZonedDateTime.now();
+        if (date.isBefore(now)) {
+            rwConfig.setNextRegenDate(now);
+            new RegenTask().run();
+        }
+        else {
+            handler.scheduleTask(date);
+        }
     }
 
     @Override
@@ -43,8 +56,8 @@ public final class RegenWorld extends JavaPlugin {
         return rwConfig;
     }
 
-    public WorldController getController() {
-        return controller;
+    public RegenWorldHandler getHandler() {
+        return handler;
     }
 
     public static RegenWorld getInstance() {
