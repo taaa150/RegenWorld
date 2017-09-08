@@ -82,18 +82,12 @@ public class RegenWorldHandler implements CommandExecutor {
     }
 
     public void regenWorld(String name) {
-        for (String s : instance.getRwConfig().getBeforeCommands()) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.replaceAll("%world%", name));
-        }
         PreRegenWorldEvent preEvent = new PreRegenWorldEvent(name);
         Bukkit.getPluginManager().callEvent(preEvent);
         if (preEvent.isCancelled())
             return;
         
         controller.regenWorld(name);
-        for (String s : instance.getRwConfig().getAfterCommands()) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.replaceAll("%world%", name));
-        }
 
         Bukkit.getPluginManager().callEvent(new RegenWorldEvent(name));
     }

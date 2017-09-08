@@ -3,6 +3,7 @@ package io.monchi.regenworld;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import io.monchi.regenworld.controller.MVController;
 import io.monchi.regenworld.controller.WorldController;
+import io.monchi.regenworld.listener.RegenWorldListener;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,6 +23,8 @@ public final class RegenWorld extends JavaPlugin {
         saveDefaultConfig();
         this.rwConfig = new RwConfig(new File(getDataFolder(), "config.yml"));
         rwConfig.load();
+
+        getServer().getPluginManager().registerEvents(new RegenWorldListener(), this);
 
         WorldController controller;
         if (getServer().getPluginManager().isPluginEnabled("Multiverse-Core")) {
