@@ -92,10 +92,6 @@ public class RegenWorldHandler implements CommandExecutor {
         Bukkit.getPluginManager().callEvent(new RegenWorldEvent(name));
     }
 
-    public WorldController getController() {
-        return controller;
-    }
-
     enum CommandType {
 
         HELP("help", "/rw help", "See list of commands", 1),

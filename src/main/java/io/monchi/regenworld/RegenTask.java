@@ -11,11 +11,12 @@ import java.util.TimerTask;
 public class RegenTask extends TimerTask{
     @Override
     public void run() {
-        Bukkit.getScheduler().runTask(RegenWorld.getInstance(), () -> {
-            RegenWorldHandler handler = RegenWorld.getInstance().getHandler();
-            RwConfig config = RegenWorld.getInstance().getRwConfig();
+        RegenWorld instance = RegenWorld.getInstance();
+        RegenWorldHandler handler = instance.getHandler();
+        RwConfig config = instance.getRwConfig();
+        Bukkit.getScheduler().runTask(instance, () -> {
             config.getWorlds().stream()
-                    .filter(s -> handler.getController().isControllable(s))
+                    .filter(s -> instance.getController().isControllable(s))
                     .forEach(handler::regenWorld);
 
             ZonedDateTime date = config.getNextRegenDate().plusMinutes(config.getRegenInterval());

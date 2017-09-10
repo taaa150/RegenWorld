@@ -14,6 +14,7 @@ public final class RegenWorld extends JavaPlugin {
 
     private static RegenWorld instance;
     private RwConfig rwConfig;
+    private WorldController controller;
     private RegenWorldHandler handler;
 
     @Override
@@ -26,7 +27,6 @@ public final class RegenWorld extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new RegenWorldListener(), this);
 
-        WorldController controller;
         if (getServer().getPluginManager().isPluginEnabled("Multiverse-Core")) {
             controller = new MVController((MultiverseCore)getServer().getPluginManager().getPlugin("Multiverse-Core"));
         }
@@ -57,6 +57,10 @@ public final class RegenWorld extends JavaPlugin {
 
     public RwConfig getRwConfig() {
         return rwConfig;
+    }
+
+    public WorldController getController() {
+        return controller;
     }
 
     public RegenWorldHandler getHandler() {
