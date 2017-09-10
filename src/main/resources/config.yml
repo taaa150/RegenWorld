@@ -1,7 +1,7 @@
 periodical:
   #!!!DO NOT CHANGE DATE MANUALLY!!!
-  date: 2100-01-01T00:00:00.000+09:00
-  interval: 3
+  date: 2100-01-01=00:00:00.001+09:00
+  interval: 10080
   worlds:
     - TEST
 

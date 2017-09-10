@@ -34,7 +34,7 @@ public class RwConfig {
 
     public void load() {
         this.regenInterval = config.getInt("periodical.interval");
-        this.nextRegenDate = ZonedDateTime.parse(config.getString("periodical.date"), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        this.nextRegenDate = ZonedDateTime.parse(config.getString("periodical.date").replaceAll("=", "T"), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         this.worlds = config.getStringList("periodical.worlds");
         this.beforeCommands = config.getStringList("command.before");
         this.afterCommands = config.getStringList("command.after");
