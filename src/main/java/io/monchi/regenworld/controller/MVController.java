@@ -2,6 +2,8 @@ package io.monchi.regenworld.controller;
 
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MultiverseWorld;
+import org.bukkit.Location;
+import org.bukkit.World;
 
 /**
  * @author Mon_chi
@@ -23,5 +25,10 @@ public class MVController implements WorldController{
     @Override
     public void regenWorld(String name) {
         core.getMVWorldManager().regenWorld(name, false, true, "");
+    }
+
+    @Override
+    public void setSpawnLocation(String world, Location location) {
+        core.getMVWorldManager().getMVWorld(world).setSpawnLocation(location);
     }
 }
