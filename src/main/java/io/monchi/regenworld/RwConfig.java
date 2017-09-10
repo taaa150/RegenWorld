@@ -1,5 +1,7 @@
 package io.monchi.regenworld;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -23,6 +25,8 @@ public class RwConfig {
     private List<String> beforeCommands;
     private List<String> afterCommands;
 
+    private World tpWorld;
+
     public RwConfig(File file) {
         this.file = file;
         this.config = YamlConfiguration.loadConfiguration(file);
@@ -34,6 +38,7 @@ public class RwConfig {
         this.worlds = config.getStringList("periodical.worlds");
         this.beforeCommands = config.getStringList("command.before");
         this.afterCommands = config.getStringList("command.after");
+        this.tpWorld = Bukkit.getWorld(config.getString("tp-world"));
     }
 
     public void save() {
@@ -68,5 +73,9 @@ public class RwConfig {
 
     public List<String> getAfterCommands() {
         return afterCommands;
+    }
+
+    public World getTpWorld() {
+        return tpWorld;
     }
 }

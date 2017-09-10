@@ -4,8 +4,11 @@ periodical:
   interval: 3
   worlds:
     - TEST
+
 command:
   before:
     - say Start regenerating %world%
   after:
     - say Finish regenerating %world%
+
+tp-world: world

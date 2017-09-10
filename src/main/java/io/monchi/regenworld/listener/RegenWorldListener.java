@@ -4,6 +4,9 @@ import io.monchi.regenworld.RegenWorld;
 import io.monchi.regenworld.event.PreRegenWorldEvent;
 import io.monchi.regenworld.event.RegenWorldEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -16,6 +19,10 @@ public class RegenWorldListener implements Listener {
     public void onPreRegenWorld(PreRegenWorldEvent event) {
         for (String s : RegenWorld.getInstance().getRwConfig().getBeforeCommands()) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.replaceAll("%world%", event.getWorldName()));
+        }
+
+        for (Player player : Bukkit.getWorld(event.getWorldName()).getPlayers()) {
+            player.teleport(RegenWorld.getInstance().getRwConfig().getTpWorld().getSpawnLocation());
         }
     }
 
