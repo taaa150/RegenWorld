@@ -24,7 +24,7 @@ public class MVController implements WorldController{
 
     @Override
     public void regenWorld(String name) {
-        core.getMVWorldManager().regenWorld(name, false, true, "");
+        core.getMVWorldManager().regenWorld(name, true, true, "");
     }
 
     @Override
