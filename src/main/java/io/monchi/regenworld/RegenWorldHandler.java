@@ -49,7 +49,7 @@ public class RegenWorldHandler implements CommandExecutor {
         return true;
     }
 
-    public void scheduleTask(ZonedDateTime date) {
+    public ZonedDateTime scheduleTask(ZonedDateTime date) {
         if (timer != null)
             timer.cancel();
         timer = new Timer();
@@ -57,6 +57,7 @@ public class RegenWorldHandler implements CommandExecutor {
         instance.getLogger().info("Next regeneration will run at " + date.format(DateTimeFormatter.ISO_LOCAL_DATE) + " " + date.format(DateTimeFormatter.ISO_LOCAL_TIME));
         instance.getRwConfig().setNextRegenDate(date);
         instance.getRwConfig().save();
+        return date;
     }
 
     private void runCommand(CommandSender sender, CommandType command, String[] args) {
@@ -78,6 +79,9 @@ public class RegenWorldHandler implements CommandExecutor {
                     sender.sendMessage(ChatColor.GREEN + "Regeneration has been completed!");
                 }
                 break;
+            case SCHEDULE:
+                ZonedDateTime date = scheduleTask(ZonedDateTime.now().plusMinutes(RegenWorld.getInstance().getRwConfig().getRegenInterval()));
+                sender.sendMessage("Next regeneration will run at " + date.format(DateTimeFormatter.ISO_LOCAL_DATE) + " " + date.format(DateTimeFormatter.ISO_LOCAL_TIME));
         }
     }
 
@@ -95,7 +99,8 @@ public class RegenWorldHandler implements CommandExecutor {
     enum CommandType {
 
         HELP("help", "/rw help", "See list of commands", 1),
-        REGEN("regen", "/rw regen <world>", "Regenerate the world", 2);
+        REGEN("regen", "/rw regen <world>", "Regenerate the world", 2),
+        SCHEDULE("schedule", "/rw schedule", "Schedule next regeneration according to interval", 1);
 
         private String name;
         private String usage;
