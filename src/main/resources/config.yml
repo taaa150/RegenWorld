@@ -2,6 +2,7 @@ periodical:
   #!!!DO NOT CHANGE DATE MANUALLY!!!
   date: 2100-01-01=00:00:00.001+09:00
   interval: 10080
+  warn-message: "&cWorld regeneration will begin in %minute% minute(s)."
   worlds:
     - TEST
 

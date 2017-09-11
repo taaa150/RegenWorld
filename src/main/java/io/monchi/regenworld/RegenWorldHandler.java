@@ -13,6 +13,8 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Mon_chi
@@ -22,6 +24,7 @@ public class RegenWorldHandler implements CommandExecutor {
     private RegenWorld instance;
     private WorldController controller;
     private Timer timer;
+    private TimerTask task;
 
     public RegenWorldHandler(WorldController controller) {
         this.instance = RegenWorld.getInstance();
@@ -50,14 +53,21 @@ public class RegenWorldHandler implements CommandExecutor {
     }
 
     public ZonedDateTime scheduleTask(ZonedDateTime date) {
-        if (timer != null)
-            timer.cancel();
+        resetTask();
         timer = new Timer();
-        timer.schedule(new RegenTask(), Date.from(date.toInstant()));
+        task = new RegenTask();
+        timer.scheduleAtFixedRate(task, Date.from(date.minusMinutes(10).toInstant()), TimeUnit.MINUTES.toMillis(1));
         instance.getLogger().info("Next regeneration will run at " + date.format(DateTimeFormatter.ISO_LOCAL_DATE) + " " + date.format(DateTimeFormatter.ISO_LOCAL_TIME));
         instance.getRwConfig().setNextRegenDate(date);
         instance.getRwConfig().save();
         return date;
+    }
+
+    public void resetTask() {
+        if (timer != null)
+            timer.cancel();
+        if (task != null)
+            task.cancel();
     }
 
     private void runCommand(CommandSender sender, CommandType command, String[] args) {

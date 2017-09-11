@@ -53,6 +53,7 @@ public final class RegenWorld extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        handler.resetTask();
     }
 
     public RwConfig getRwConfig() {

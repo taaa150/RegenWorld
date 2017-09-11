@@ -1,6 +1,7 @@
 package io.monchi.regenworld;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -20,6 +21,7 @@ public class RwConfig {
 
     private int regenInterval;
     private ZonedDateTime nextRegenDate;
+    private String warnMessage;
     private List<String> worlds;
 
     private List<String> beforeCommands;
@@ -35,6 +37,7 @@ public class RwConfig {
     public void load() {
         this.regenInterval = config.getInt("periodical.interval");
         this.nextRegenDate = ZonedDateTime.parse(config.getString("periodical.date").replaceAll("=", "T"), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        this.warnMessage = ChatColor.translateAlternateColorCodes('&', config.getString("periodical.warn-message"));
         this.worlds = config.getStringList("periodical.worlds");
         this.beforeCommands = config.getStringList("command.before");
         this.afterCommands = config.getStringList("command.after");
@@ -61,6 +64,10 @@ public class RwConfig {
 
     public void setNextRegenDate(ZonedDateTime nextRegenDate) {
         this.nextRegenDate = nextRegenDate;
+    }
+
+    public String getWarnMessage() {
+        return warnMessage;
     }
 
     public List<String> getWorlds() {
