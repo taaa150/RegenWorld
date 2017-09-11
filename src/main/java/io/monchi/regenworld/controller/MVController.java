@@ -3,7 +3,6 @@ package io.monchi.regenworld.controller;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MultiverseWorld;
 import org.bukkit.Location;
-import org.bukkit.World;
 
 /**
  * @author Mon_chi
